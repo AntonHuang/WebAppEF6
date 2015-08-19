@@ -139,7 +139,7 @@ namespace WebAppEF6.Controllers
                         Name = user.MemberInfo.Name ?? "",
                         Level = GetLevelDisplayName(user.MemberInfo.Level),
                         Role = role ?? "",
-                        RegisterDate = user.MemberInfo.RegisterDate,
+                        RegisterDate = user.MemberInfo.RegisterDate.ToString("yyyy'-'MM'-'dd"),
                         NeedToChangePassword = user.ChangedPassword == false
                     });
                 }
