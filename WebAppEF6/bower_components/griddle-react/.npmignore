@@ -1,0 +1,11 @@
+images
+scripts
+docs
+examples
+Gruntfile.js
+jest
+.gitignore
+.npmignore
+index.html
+webpack.config.js
+*.tgz

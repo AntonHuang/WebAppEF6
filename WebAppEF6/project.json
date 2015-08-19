@@ -1,0 +1,34 @@
+﻿{
+    "webroot": "Scripts",
+    "userSecretsId": "aspnet4-WebApp-b655435c-32e6-40bf-9624-259c3e31d1eb",
+    "version": "1.0.0-*",
+
+    "dependencies": {
+   
+    },
+
+    "commands": {
+        "web": "Microsoft.AspNet.Hosting --config hosting.ini"
+    },
+
+    "frameworks": {
+       
+    },
+
+    "exclude": [
+        "wwwroot",
+        "node_modules",
+        "bower_components"
+    ],
+    "publishExclude": [
+      "node_modules",
+      "bower_components",
+      "**.xproj",
+      "**.user",
+      "**.vspscc"
+    ],
+
+    "scripts": {
+        "prepublish": [ "npm install", "bower install", "gulp clean", "gulp min" ]
+    }
+}

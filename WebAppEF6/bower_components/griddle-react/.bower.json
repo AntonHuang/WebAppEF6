@@ -1,0 +1,14 @@
+{
+  "name": "griddle-react",
+  "homepage": "https://github.com/GriddleGriddle/Griddle",
+  "version": "0.2.0",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "aaf3b79a79e6347b23c28ed89b03167e60ed43b4"
+  },
+  "_source": "git://github.com/GriddleGriddle/Griddle.git",
+  "_target": "0.2.0",
+  "_originalSource": "griddle-react"
+}
