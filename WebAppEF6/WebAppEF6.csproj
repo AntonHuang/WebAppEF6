@@ -251,6 +251,7 @@
     <Content Include="package.json" />
     <Content Include="bower.json" />
     <Content Include="project.json" />
+    <None Include="Properties\PublishProfiles\WebAppEF6.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

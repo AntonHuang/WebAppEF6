@@ -155,17 +155,12 @@ var listMember = React.createClass({
                   <form className="form-horizontal" method="post" role="form" onSubmit={this.handleSubmit}>
                         <h4>查询会员信息</h4>
                         <hr />
-                       
-
                         <div className="form-group">
-
-                          
-                        <div className="col-md-4">
-                            <input className="form-control uneditable-input"
-                                   id="Filter" ref="Filter" type="text" />
-                        </div>
-
-                            <div className="col-md-2">
+                            <div className="col-md-4">
+                                <input className="form-control uneditable-input" autoFocus placeholder="姓名,电话,身份证号,推荐人ID号,会员ID号"
+                                       id="Filter" ref="Filter" type="text" />
+                            </div>
+                           <div className="col-md-2">
                                 <button type="submit" className="btn btn-default btn-block btn-primary">查找</button>
                             </div>
                         </div>
