@@ -35,8 +35,14 @@
         </div>
     </div>
     <div class="container body-content">
-
-        <dir id="app_main">
+        <div class="row">
+            <div class="col-md-5 alert alert-info alert-block pull-right">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>警告！</strong>
+                本系统第一阶段的Demo已完成，新功能持续添加中...
+            </div>
+        </div>
+        <dir class="container" id="app_main">
             @RenderBody()
         </dir>
 

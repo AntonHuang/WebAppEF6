@@ -158,7 +158,7 @@ namespace WebApp.Controllers
                         GrandsonRate = new Amount("%", pointRule.Level0GrandsonRate),
                     },
                     Level1 = new LevelRule {
-                        SelfRate = new Amount("%", pointRule.Level1SonRate),
+                        SelfRate = new Amount("%", pointRule.Level1SelfRate),
                     },
                     AvailableAfter = TimeSpan.FromDays(pointRule.AvailableAfter)
                 };

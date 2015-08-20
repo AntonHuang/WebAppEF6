@@ -67,6 +67,23 @@ var Home = React.createClass({
 });*/
 
 var Manage = React.createClass({
+
+    statics: {
+        willTransitionTo: function (transition, params, query, callback) {
+            //console.debug("Manage willTransitionTo ", transition, params, query, callback)
+            var user = AccountStore.getCurrentUser();
+            if (!user || (user.Role != "Administrator" && user.Role != "ShopManager")) {
+                console.debug("Manage Router  Deny", transition);
+                transition.redirect("home");
+            } else {
+                callback();
+            }
+        },
+
+        willTransitionFrom: function (transition, component) {
+        }
+    },
+
     render: function () {
         return (
            <div className="row">
@@ -110,7 +127,7 @@ var PointExch = require("./pointExch.jsx");
 var PointRule = require("./pointRule.jsx");
 
 var routes = (
-  <Route handler={App} path="/">
+  <Route handler={App} path="/" name="app">
     <Route handler={Account} path="account">
       <Route name="login" path="login" handler={Login} />
       <Route name="register" path="register" handler={Register} />
