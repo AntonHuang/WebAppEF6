@@ -34,7 +34,7 @@ var SellMattressResult = React.createClass({
 
     componentDidUpdate: function (newProps, newState) {
         React.findDOMNode(this.refs.MattressID).value = this.props.sellMattressData.MattressID;
-        React.findDOMNode(this.refs.MattressTypeID).value = this.props.sellMattressData.MattressTypeName;
+        React.findDOMNode(this.refs.MattressTypeName).value = this.props.sellMattressData.MattressTypeName;
         React.findDOMNode(this.refs.DeliveryAddress).value = this.props.sellMattressData.DeliveryAddress;
         React.findDOMNode(this.refs.CustomerID).value = this.props.sellMattressData.CustomerID;
         React.findDOMNode(this.refs.SaleDate).value = this.props.sellMattressData.SaleDate;
@@ -64,8 +64,8 @@ var SellMattressResult = React.createClass({
 
                     <label className="col-md-2 control-label" htmlFor="MattressTypeID">床垫型号：</label>
                     <div className="col-md-4">
-                        <input className="form-control  uneditable-input" id="MattressTypeID" ref="MattressTypeID"
-                               readOnly defaultValue={this.props.sellMattressData.MattressTypeID } />
+                        <input className="form-control  uneditable-input" id="MattressTypeName" ref="MattressTypeName"
+                               readOnly defaultValue={this.props.sellMattressData.MattressTypeName } />
                     </div>
 
                         </div>

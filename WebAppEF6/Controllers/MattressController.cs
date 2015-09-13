@@ -103,7 +103,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 var items = await  this.AppDbContext.ProductDesc.Select(
-                                      pd => new { ID = pd.ID, Name = pd.Name, Type = pd.Type }
+                                      pd => new { ID = pd.ID, Name = pd.DisplayName, Type = pd.Type,  Price = pd.Price }
                                     ).ToListAsync();
 
                 //if (items.Count() > 0)
@@ -181,7 +181,8 @@ namespace WebApp.Controllers
                 Gifts = model.Gifts,
                 DeliveryAddress = model.DeliveryAddress,
                 Prodect = mattress,
-                Price = productDesc.Price
+                Price = productDesc.Price,
+                CashCoupon = model.IsUseCashCoupon ? 1000 : 0
 
             };
             SaleToCustomer saleToCustomer = new SaleToCustomer
@@ -213,7 +214,7 @@ namespace WebApp.Controllers
                     memberPointItems = pointItems,
                     sellMattressData = new {
                         MattressID= mattress.ID,
-                        MattressTypeName= mattress.TypeDesc.Name,
+                        MattressTypeName= mattress.TypeDesc.DisplayName,
                         DeliveryAddress= saleToCustomerDetail.DeliveryAddress,
                         CustomerID= saleToCustomer.Customer.MemberID,
                         SaleDate= saleToCustomer.DealDate.Date.ToString("yyyy'-'MM'-'dd"),
@@ -231,39 +232,43 @@ namespace WebApp.Controllers
             var customers = await (from m1 in this.AppDbContext.Members
                                    join m2 in this.AppDbContext.Members
                                        on m1.ReferenceMemberID equals m2.MemberID
-                                    select new {
-                                        MemberID = m1.MemberID,
-                                        MemberName = m1.Name,
-                                        MemberLevel = m1.Level,
+                                   where m1.MemberID.Equals(saleToCustomerDetail.Sale.Customer.MemberID, StringComparison.InvariantCultureIgnoreCase)
+                                   select m2 into M01
+                                   join m3 in this.AppDbContext.Members
+                                       on M01.ReferenceMemberID equals m3.MemberID into M02
+                                   from m4 in M02.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       MemberID = M01.MemberID,
+                                       MemberName = M01.Name,
+                                       MemberLevel = M01.Level,
 
-                                        Up1ID = m2.MemberID,
-                                        Up1Name = m2.Name,
-                                        Up1Level = m2.Level,
-                                        Up1ReferenceMemberID = m2.ReferenceMemberID
-                                    } into M12
-                                   join m3 in this.AppDbContext.Members 
-                                       on M12.Up1ReferenceMemberID equals m3.MemberID into M23
-                                   from m5 in M23.DefaultIfEmpty()
-                                   where M12.MemberID.Equals(saleToCustomerDetail.Sale.Customer.MemberID, 
-                                       StringComparison.InvariantCultureIgnoreCase)
+                                       Up1ID = m4.MemberID,
+                                       Up1Name = m4.Name,
+                                       Up1Level = m4.Level,
+                                       Up1ReferenceMemberID = m4.ReferenceMemberID
+                                   } into M03
+                                   join m5 in this.AppDbContext.Members
+                                       on M03.Up1ReferenceMemberID equals m5.MemberID into M04
+                                   from m6 in M04.DefaultIfEmpty()
                                    select new SellMemberPointViewModel
                                    {
-                                       MemberID = M12.MemberID,
-                                       MemberName = M12.MemberName,
-                                       MemberLevel = M12.MemberLevel,
+                                       MemberID = M03.MemberID,
+                                       MemberName = M03.MemberName,
+                                       MemberLevel = M03.MemberLevel,
 
-                                       Up1ID = M12.Up1ID,
-                                       Up1Name = M12.Up1Name,
-                                       Up1Level = M12.Up1Level,
+                                       Up1ID = M03.Up1ID,
+                                       Up1Name = M03.Up1Name,
+                                       Up1Level = M03.Up1Level,
 
-                                       Up2ID = m5.MemberID,
-                                       Up2Name = m5.Name,
-                                       Up2Level = m5.Level,
+                                       Up2ID = m6.MemberID,
+                                       Up2Name = m6.Name,
+                                       Up2Level = m6.Level,
                                    }).FirstOrDefaultAsync();
 
-            
+
             //var customers = GetCustomersFromSqlCommand(AppDbContext.Database.Connection, 
-           //      saleToCustomerDetail.Sale.Customer.MemberID);
+            //      saleToCustomerDetail.Sale.Customer.MemberID);
 
 
             if (customers == null)
@@ -284,63 +289,48 @@ namespace WebApp.Controllers
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(customers.MemberID) == false)
-            {
-                MemberPoint menberPoint = new MemberPoint(saleToCustomerDetail);
-                menberPoint.Owner = this.AppDbContext.FindOrAttachToLocal(customers.MemberID );
-                menberPoint.UseableDate = pointRule.CalcAvailableDate(menberPoint.DealDate);
-                menberPoint.Quantity = pointRule.Calc(customers.MemberLevel, LevelRelation.Self, saleToCustomerDetail.Price);
-                menberPoint.ID = IDGenerator.GetMemberPointIDGenerator(this.AppDbContext).GetNext();
+            customers.PointCount = await AddOneMemberPoint(saleToCustomerDetail, pointRule,
+                customers.MemberID, customers.MemberLevel, LevelRelation.Self);
 
-                var pointInfo = await GetMemberPointInfo(menberPoint.Owner.MemberID);
-                if(pointInfo != null)
-                {
-                    menberPoint.CurrentTotalQuantity = pointInfo.PointTotal;
-                }
+            customers.Up1PointCount = await AddOneMemberPoint(saleToCustomerDetail, pointRule,
+                customers.Up1ID, customers.Up1Level, LevelRelation.Son);
 
-                this.AppDbContext.MemberPoint.Add(menberPoint);
-                customers.PointCount = menberPoint.Quantity;
-            }
-
-            if (string.IsNullOrWhiteSpace(customers.Up1ID) == false)
-            {
-                MemberPoint menberPoint = new MemberPoint(saleToCustomerDetail);
-                menberPoint.Owner = this.AppDbContext.FindOrAttachToLocal(customers.Up1ID );
-                menberPoint.UseableDate = pointRule.CalcAvailableDate(menberPoint.DealDate);
-                menberPoint.Quantity = pointRule.Calc(customers.Up1Level,
-                    LevelRelation.Son, saleToCustomerDetail.Price);
-                menberPoint.ID = IDGenerator.GetMemberPointIDGenerator(this.AppDbContext).GetNext();
-
-                var pointInfo = await GetMemberPointInfo(menberPoint.Owner.MemberID);
-                if (pointInfo != null)
-                {
-                    menberPoint.CurrentTotalQuantity = pointInfo.PointTotal;
-                }
-
-                this.AppDbContext.MemberPoint.Add(menberPoint);
-                customers.Up1PointCount = menberPoint.Quantity;
-            }
-
-            if (string.IsNullOrWhiteSpace(customers.Up2ID) == false)
-            {
-                MemberPoint menberPoint = new MemberPoint(saleToCustomerDetail);
-                menberPoint.Owner = this.AppDbContext.FindOrAttachToLocal(customers.Up2ID );
-                menberPoint.UseableDate = pointRule.CalcAvailableDate(menberPoint.DealDate);
-                menberPoint.Quantity = pointRule.Calc(customers.Up2Level,
-                    LevelRelation.Grandson, saleToCustomerDetail.Price);
-                menberPoint.ID = IDGenerator.GetMemberPointIDGenerator(this.AppDbContext).GetNext();
-
-                var pointInfo = await GetMemberPointInfo(menberPoint.Owner.MemberID);
-                if (pointInfo != null)
-                {
-                    menberPoint.CurrentTotalQuantity = pointInfo.PointTotal;
-                }
-
-                this.AppDbContext.MemberPoint.Add(menberPoint);
-                customers.Up2PointCount = menberPoint.Quantity;
-            }
+            customers.Up2PointCount = await AddOneMemberPoint(saleToCustomerDetail, pointRule, 
+                customers.Up2ID, customers.Up2Level, LevelRelation.Grandson);
 
             return customers;
+        }
+
+        private async Task<decimal> AddOneMemberPoint(SaleToCustomerDetail saleToCustomerDetail,  MemberPointRule pointRule, 
+            string customerID, string customerLevel, LevelRelation relation)
+        {
+            if (string.IsNullOrWhiteSpace(customerID) == false && string.IsNullOrWhiteSpace(customerLevel) == false)
+            {
+                MemberPoint menberPoint = new MemberPoint(saleToCustomerDetail);
+                menberPoint.Owner = this.AppDbContext.FindOrAttachToLocal(customerID);
+                menberPoint.UseableDate = pointRule.CalcAvailableDate(menberPoint.DealDate);
+                menberPoint.Quantity = pointRule.Calc(customerLevel, relation, saleToCustomerDetail.Price - saleToCustomerDetail.CashCoupon);
+                menberPoint.ID = IDGenerator.GetMemberPointIDGenerator(this.AppDbContext).GetNext();
+
+                await CalcCurrentTotal(menberPoint);
+
+                this.AppDbContext.MemberPoint.Add(menberPoint);
+                return menberPoint.Quantity;
+            }
+            return 0;
+        }
+
+        private async Task CalcCurrentTotal(MemberPoint menberPoint)
+        {
+            var pointInfo = await GetMemberPointInfo(menberPoint.Owner.MemberID);
+            if (pointInfo != null)
+            {
+                menberPoint.CurrentTotalQuantity = pointInfo.PointTotal + menberPoint.Quantity;
+            }
+            else
+            {
+                menberPoint.CurrentTotalQuantity = menberPoint.Quantity;
+            }
         }
 
         public static SellMemberPointViewModel GetCustomersFromSqlCommand(DbConnection connection, string customerID)
@@ -556,7 +546,7 @@ namespace WebApp.Controllers
                                  ProductBuyerID = c.MemberID,
                                  ProductBuyerReferenceID = c.ReferenceMemberID,
                                  ProductBuyerName = c.Name,
-                                 ProductType = pDesc.Name,
+                                 ProductType = pDesc.DisplayName,
                                  DealDate = mp.DealDate,
                                  CreateDate = mp.DealDate,
                                  Point = mp.Quantity,
@@ -567,8 +557,7 @@ namespace WebApp.Controllers
                 var newResult = (from item in result
                                  select new {
                                      ProductBuyerName = item.ProductBuyerName,
-                                     BuyerRelation = item.ProductBuyerID.Equals(id) ? "自己"
-                                                         : item.ProductBuyerReferenceID.Equals(id) ? "二级" : "三级",
+                                     BuyerRelation = item.ProductBuyerReferenceID.Equals(id) ? "直接推荐" : "下家推荐",
                                      ProductTypeName = item.ProductType,
                                      DealDate = item.DealDate.ToString("yyyy'-'MM'-'dd"),
                                      Point = item.Point,
@@ -644,15 +633,33 @@ namespace WebApp.Controllers
                     }
 
                 }*/
-                   
-                var result = children.GroupBy(i => i.SonID).Select((g) => new
+
+                var grandSonIDList = children.Where(m => m.GrandSonID != null).Select(m => m.GrandSonID).ToList();
+                var posterity = (from m1 in this.AppDbContext.Members
+                                 join m2 in this.AppDbContext.Members
+                                          on m1.MemberID equals m2.ReferenceMemberID
+                                 where grandSonIDList.Contains(m1.MemberID)
+                                 select new
+                                 {
+                                     ID = m2.MemberID,
+                                     Name = m2.Name,
+                                     ReferenceMemberID = m2.ReferenceMemberID
+                                 }
+                                ).ToList();
+
+                var result = children.GroupBy(i => i.SonID).Select((g) => new MemberRelation
                 {
-                    ChildID = g.Key,
-                    ChildName = g.Select(a => a.SonName).FirstOrDefault(),
-                    children = g.Select(a => new {
-                        ChildID = a.GrandSonID,
-                        ChildName = a.GrandSonName
-                    }).Where(item => string.IsNullOrWhiteSpace(item.ChildID) == false ).ToList()
+                    ID = g.Key,
+                    Name = g.Select(a => a.SonName).FirstOrDefault(),
+                    Children = g.Where(a => string.IsNullOrWhiteSpace(a.GrandSonID) == false).Select(a => new MemberRelation
+                    {
+                        ID = a.GrandSonID,
+                        Name = a.GrandSonName,
+                        Children = posterity.Where(p => a.GrandSonID.Equals(p.ReferenceMemberID)).Select(p => new MemberRelation {
+                            ID = p.ID,
+                            Name = p.Name
+                        }).ToList()
+                    }).ToList()
                 }).ToList();
                 
                 return Json(result, JsonRequestBehavior.AllowGet);
@@ -668,6 +675,13 @@ namespace WebApp.Controllers
             public string GrandSonName { get; set; }
             public string SonID { get; set; }
             public string SonName { get; set; }
+        }
+
+        private class MemberRelation
+        {
+            public string ID { get; set; }
+            public string Name { get; set; }
+            public List<MemberRelation> Children { get; set; }
         }
     }
 }

@@ -182,21 +182,21 @@ var pointRule = React.createClass({
                       <hr />  
                       <h4>普通会员</h4>
                         <div className="form-group">
-                            <label className="col-md-2 control-label" htmlFor="L0Self">购买返积分：</label>
+                            <label className="col-md-3 control-label" htmlFor="L0Self">推荐者返积分：</label>
                             <div className="col-md-8">
                                 <input className="form-control uneditable-input" type="text" autoFocus
                                 id="L0Self" ref="L0Self"/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="col-md-2 control-label" htmlFor="L0Son">二级返积分：</label>
+                            <label className="col-md-3 control-label" htmlFor="L0Son">推荐者上一级返积分：</label>
                              <div className="col-md-8">
                                 <input className="form-control uneditable-input" type="text"
                                        id="L0Son" ref="L0Son" />
                              </div>
                         </div>
                           <div className="form-group">
-                                <label className="col-md-2 control-label" htmlFor="L0Grandson">三级返积分：</label>
+                                <label className="col-md-3 control-label" htmlFor="L0Grandson">推荐者上两级返积分：</label>
                                  <div className="col-md-8">
                                     <input className="form-control uneditable-input" type="text"
                                            id="L0Grandson" ref="L0Grandson" />
@@ -206,7 +206,7 @@ var pointRule = React.createClass({
                           <hr />
                           <h4>高级会员</h4>
                            <div className="form-group">
-                                <label className="col-md-2 control-label" htmlFor="L1Self">购买返积分：</label>
+                                <label className="col-md-3 control-label" htmlFor="L1Self">推荐者返积分：</label>
                                 <div className="col-md-8">
                                     <input className="form-control uneditable-input" type="text"
                                            id="L1Self" ref="L1Self" />
@@ -216,7 +216,7 @@ var pointRule = React.createClass({
                           <h4>积分兑换</h4>
 
                           <div className="form-group">
-                                    <label className="col-md-2 control-label" htmlFor="availableAfter">可兑换时间：</label>
+                                    <label className="col-md-3 control-label" htmlFor="availableAfter">可兑换时间：</label>
                                     <div className="col-md-8">
                                         <input className="form-control uneditable-input" type="text"
                                                id="availableAfter" ref="availableAfter" />

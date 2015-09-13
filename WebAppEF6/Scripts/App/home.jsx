@@ -8,6 +8,8 @@ var MemberRelation = require("./memberRelation.jsx");
 
 var MemberInfo = React.createClass({
 
+
+
     render: function () {
 
         if (!this.props.user || !this.props.user.ID) {
@@ -38,8 +40,15 @@ var MemberInfo = React.createClass({
                             <label className="col-md-2 control-label" htmlFor="ExchAmount">会员类别：</label>
                               <div className="col-md-4">
                                   <input className="form-control" id="ExchAmount" ref="ExchAmount" type="text"
-                                     readOnly  defaultValue={this.props.user.Level ="level1" ? "高级会员" : "普通会员" } />
+                                     readOnly  defaultValue={this.props.user.Level} />
                               </div>
+
+                           <label className="col-md-2 control-label" htmlFor="SelfPointRate">推荐积分比：</label>
+                            <div className="col-md-4">
+                                <input className="form-control" id="SelfPointRate" ref="SelfPointRate"
+                                       type="text" readOnly
+                                       value={this.props.user.SelfPointRate + '%' } />
+                            </div>
                    </div>
                </section>
             </div>

@@ -83,7 +83,8 @@ namespace WebApp.DomainModels.Customer
 
     public class MemberPointRule
     {
-       
+        private const string RateType = "%";
+
         public LevelRule Level0;
         public LevelRule Level1;
         public TimeSpan AvailableAfter;
@@ -101,13 +102,13 @@ namespace WebApp.DomainModels.Customer
                 {
                     Level0 = new LevelRule
                     {
-                        SelfRate = new Amount("%", 2),
-                        SonRate = new Amount("%", 2),
-                        GrandsonRate = new Amount("%", 2),
+                        SelfRate = new Amount(RateType, 4),
+                        SonRate = new Amount(RateType, 2),
+                        GrandsonRate = new Amount(RateType, 2),
                     },
                     Level1 = new LevelRule()
                     {
-                        SelfRate = new Amount("%", 20)
+                        SelfRate = new Amount(RateType, 12)
                     },
                     AvailableAfter = TimeSpan.FromDays(180)
                 };
@@ -132,6 +133,18 @@ namespace WebApp.DomainModels.Customer
             return JsonConvert.SerializeObject(this);
         }
 
+        public Amount GetPointRate(string level, LevelRelation relation)
+        {
+            Amount rate = GetRate(level, relation);
+            if (rate == null)
+            {
+                return new Amount(RateType, 0);
+            }
+
+            rate = ApplyAdditionRule(level, relation, rate);
+            return rate;
+        }
+
         public DateTime CalcAvailableDate(DateTime date) {
             return date.Add(AvailableAfter);
         }
@@ -144,8 +157,9 @@ namespace WebApp.DomainModels.Customer
                 return 0;
             }
 
+            rate = ApplyAdditionRule(level, relation , rate);
 
-            if ("%".Equals(rate.Type))
+            if (RateType.Equals(rate.Type))
             {
                 // rate = 20% 
                 // qty = 200
@@ -156,13 +170,38 @@ namespace WebApp.DomainModels.Customer
             return 0;
         }
 
+        private Amount ApplyAdditionRule(string level, LevelRelation relation, Amount rate)
+        {
+            if (LevelRelation.Self == relation && isLevel1(level))
+            {
+                int addR = 0;
+                int.TryParse(level.Substring(6), out addR);
+                if(addR > 8){
+                    addR = 8;
+                }
+
+                return rate + new Amount(rate.Type, addR);
+            }
+            return rate;
+        }
+
+        private bool isLevel0(string level)
+        {
+            return level != null && level.StartsWith("LevelA", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private bool isLevel1(string level)
+        {
+            return level != null && level.StartsWith("LevelB", StringComparison.InvariantCultureIgnoreCase);
+        }
+
         private Amount GetRate(string level, LevelRelation relation)
         {
-            if ("Level0".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            if (isLevel0(level))
             {
                 return getLevel0Rate(relation);
             }
-            else if ("Level1".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            else if (isLevel1(level))
             {
                 return getLevel1Rate(relation);
             }

@@ -64,7 +64,7 @@ var MemberRelation = React.createClass({
         }
 
         function showChild(item) {
-            return <Button>{item.ChildName}</Button>;
+            return <Button>{item.Name}</Button>;
         }
 
         function checkData(data) {
@@ -77,12 +77,22 @@ var MemberRelation = React.createClass({
            <PanelGroup  accordion>
                {checkData(this.state.RelationItems)}
                {this.state.RelationItems.map(function(item,idx){
-                    if(item.children && item.children.length > 0){
-               return (<Panel header={item.ChildName} eventKey={idx+1}>
-                        <ButtonGroup>{item.children? item.children.map(showChild) : "" }</ButtonGroup>
-                       </Panel>);
+                    if(item.Children && item.Children.length > 0){
+                        return (<Panel header={item.Name} eventKey={idx+1}>
+                                    <PanelGroup accordion>
+                                        {item.Children.map(function(item2, idx2){
+                                            if(item2.Children && item2.Children.length > 0){
+                                                return (<Panel header={item2.Name} eventKey={idx2+1}>
+                                                             <ButtonGroup>{item2.Children? item2.Children.map(showChild) : "" } </ButtonGroup>
+                                                        </Panel>);
+                                            }else{
+                                                return (<Panel header={item2.Name} eventKey={idx2+1} />);
+                                            }
+                                        })}
+                                    </PanelGroup>
+                               </Panel>);
                     }else{
-                        return (<Panel header={item.ChildName} eventKey={idx+1} />);
+                        return (<Panel header={item.Name} eventKey={idx+1} />);
                     }
                     
                })}

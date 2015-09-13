@@ -48,7 +48,7 @@ var SaleMemberPoint = React.createClass({
                 <hr />
                 <h4>积分信息</h4>
                  <div className="row">
-                    <h5>购买人积分信息：</h5>
+                    <h5>推荐人积分信息：</h5>
                     <div className="col-md-12">
                         <SaleMemberPointItem MemberPoint={{
                 Name: this.props.MemberPointItems.MemberName || "",

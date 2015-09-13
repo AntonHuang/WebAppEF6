@@ -15,6 +15,8 @@ using WebApp.DomainModels.Customer;
 
 using System.Data.Entity;
 using LinqKit;
+using WebApp.DomainModels.Core;
+using WebApp.DomainModels;
 
 namespace WebAppEF6.Controllers
 {
@@ -111,38 +113,47 @@ namespace WebAppEF6.Controllers
 
 
                 var role = (await this.UserManager.GetRolesAsync(user.UserName)).FirstOrDefault();
-
+                UserInfoViewModel menber = null;
                 if (user.MemberInfo == null)
                 {
-                    var menber = await (from member in this.AppDbContext.Members
+                    menber = await (from member in this.AppDbContext.Members
                                   where member.MemberID.Equals(user.UserName)
-                                  select new
+                                  select new UserInfoViewModel
                                   {
                                       ID = member.MemberID,
                                       Name = member.Name ?? "",
-                                      Level = GetLevelDisplayName(member.Level),
+                                      Level = member.Level ?? "",
                                       Role = role ?? "",
                                       RegisterDate = member.RegisterDate.ToString("yyyy'-'MM'-'dd"),
                                       NeedToChangePassword = user.ChangedPassword == false
                                   }).FirstOrDefaultAsync();
-                    if (menber == null)
-                    {
-                        return HttpNotFound();
-                    }
-                    return  JsonMessage.JsonResult(menber);
-                }
-                else
+                  
+                } else
                 {
-                    return JsonMessage.JsonResult(new
+                    menber =  new UserInfoViewModel
                     {
                         ID = user.MemberInfo.MemberID,
                         Name = user.MemberInfo.Name ?? "",
-                        Level = GetLevelDisplayName(user.MemberInfo.Level),
+                        Level = user.MemberInfo.Level ?? "",
                         Role = role ?? "",
                         RegisterDate = user.MemberInfo.RegisterDate.ToString("yyyy'-'MM'-'dd"),
                         NeedToChangePassword = user.ChangedPassword == false
-                    });
+                    };
                 }
+
+                if (menber == null)
+                {
+                    return HttpNotFound();
+                }
+
+                MemberPointRule pointRule = await this.GetPointRule();
+                menber.SelfPointRate = pointRule.GetPointRate(menber.Level, LevelRelation.Self).ValueOfNumber;
+                menber.Down1PointRate = pointRule.GetPointRate(menber.Level, LevelRelation.Son).ValueOfNumber;
+                menber.Down2PointRate = pointRule.GetPointRate(menber.Level, LevelRelation.Grandson).ValueOfNumber;
+
+                menber.Level = GetLevelDisplayName(menber.Level);
+
+                return JsonMessage.JsonResult(menber);
             }
             catch (Exception e)
             {
@@ -155,14 +166,47 @@ namespace WebAppEF6.Controllers
 
         private string GetLevelDisplayName(string level)
         {
-            if ("Level1".Equals(level, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return "高级会员";
-            }
-            else
+            if ("LevelA".Equals(level, StringComparison.InvariantCultureIgnoreCase))
             {
                 return "普通会员";
             }
+            else if ("levelB".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员";
+            }
+            else if ("levelB1".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 1级";
+            }
+            else if ("levelB2".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 2级";
+            }
+            else if ("levelB3".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 3级";
+            }
+            else if ("levelB4".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 4级";
+            }
+            else if ("levelB5".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 5级";
+            }
+            else if ("levelB6".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 6级";
+            }
+            else if ("levelB7".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 7级";
+            }
+            else if ("levelB8".Equals(level, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "高级会员 8级";
+            }
+            return string.Empty;
         }
 
 
@@ -797,7 +841,21 @@ namespace WebAppEF6.Controllers
 
 
 
-
+        private async Task<MemberPointRule> GetPointRule()
+        {
+            var ruleSetting = await (from s in this.AppDbContext.Settings
+                                     where s.ID.Equals(SettingName.PointRule.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                                     select s
+                          ).FirstOrDefaultAsync();
+            if (ruleSetting == null)
+            {
+                return MemberPointRule.Default;
+            }
+            else
+            {
+                return MemberPointRule.fromJson(ruleSetting.SettingValue);
+            }
+        }
 
 
         private async Task<ApplicationUser> GetCurrentUserAsync()

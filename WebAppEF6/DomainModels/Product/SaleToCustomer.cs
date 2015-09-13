@@ -39,6 +39,8 @@ namespace WebApp.DomainModels.Product
         public virtual Mattress Prodect { get; set; }
         
         public decimal Price { get; set; }
+        public decimal Discount { get; set; }
+        public decimal CashCoupon { get; set; }
         public string DeliveryAddress { get; set; }
         public string Gifts { get; set; }
         public string State { get; set; }

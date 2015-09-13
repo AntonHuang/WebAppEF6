@@ -92,6 +92,7 @@ var SellMattress = React.createClass({
         var CustomerID = React.findDOMNode(this.refs.CustomerID).value.trim();
         var SaleDate = React.findDOMNode(this.refs.SaleDate).value.trim();
         var Gifts = React.findDOMNode(this.refs.Gifts).value.trim();
+        var IsUseCashCoupon = React.findDOMNode(this.refs.IsUseCashCoupon).value == "1" ? true : false;
 
         if (!MattressID) {
             alert("床垫编号不能留空！");
@@ -108,7 +109,7 @@ var SellMattress = React.createClass({
             return;
         }
 
-        Actions.sellMattress(MattressID, MattressTypeID, DeliveryAddress, CustomerID, SaleDate, Gifts);
+        Actions.sellMattress(MattressID, MattressTypeID, DeliveryAddress, CustomerID, SaleDate, Gifts, IsUseCashCoupon);
     },
 
     render: function () {
@@ -158,6 +159,15 @@ var SellMattress = React.createClass({
                                              defaultValue={this.state.Today} />
 
                                   </div>
+                                    
+                                 <label className="col-md-2 control-label" htmlFor="IsUseCashCoupon">使用代金卷：</label>
+                                <div className="col-md-4">
+                                    <select className="form-control" id="IsUseCashCoupon" ref="IsUseCashCoupon" defaultValue = '0'>
+                                        <option value='1'>是</option>;
+                                        <option value='0'>否</option>;
+                                    </select>
+                                </div>
+
                             </div>
                             <div className="form-group">
                                 <label className="col-md-2 control-label" htmlFor="Gifts">赠送礼品：</label>

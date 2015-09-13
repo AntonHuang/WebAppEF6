@@ -98,34 +98,76 @@ namespace WebApp.Models
             {
                 ProductDesc[] items = {
                         new ProductDesc{
-                                ID = "ID_1",
-                                Name = "床垫类型_1",
-                                Type = "TT1",
-                                Price = 888
+                                ID = "PDESC001",
+                                Name = "床垫",
+                                DisplayName = "1.0*1.9*0.20",
+                                SizeSpec = "1.0*1.9*0.20",
+                                Type = "床垫",
+                                Unit = "张",
+                                Price = 17530
                             },
                         new ProductDesc {
-                                ID = "ID_2",
-                                Name = "床垫类型_2",
-                                Type = "TT2",
-                                Price = 999
+                                ID = "PDESC002",
+                                Name = "床垫",
+                                DisplayName = "1.0*2.0*0.20",
+                                SizeSpec = "1.0*2.0*0.20",
+                                Type = "床垫",
+                                Unit = "张",
+                                Price = 18580
                             },
                         new ProductDesc {
-                                ID = "ID_3",
-                                Name = "床垫类型_3",
-                                Type = "TT1",
-                                Price = 2499
+                                ID = "PDESC003",
+                                Name = "床垫",
+                                DisplayName = "1.5*1.9*0.20",
+                                SizeSpec = "1.5*1.9*0.20",
+                                Type = "床垫",
+                                Unit = "张",
+                                Price = 20980
                             },
                         new ProductDesc {
-                                ID = "ID_4",
-                                Name = "床垫类型_4",
-                                Type = "TT2",
-                                Price = 5000
+                                ID = "PDESC004",
+                                Name = "床垫",
+                                DisplayName = "1.5*2.0*0.20",
+                                SizeSpec = "1.5*2.0*0.20",
+                                Type = "床垫",
+                                Unit = "张",
+                                Price = 22130
                             },
                         new ProductDesc {
-                                ID = "ID_5",
-                                Name = "床垫类型_5",
-                                Type = "TT6",
-                                Price = 1788
+                                ID = "PDESC005",
+                                Name = "床垫",
+                                DisplayName = "1.8*2.0*0.20",
+                                SizeSpec = "1.8*2.0*0.20",
+                                Type = "床垫",
+                                Unit = "张",
+                                Price = 26110
+                            },
+                         new ProductDesc {
+                                ID = "PDESC006",
+                                Name = "床垫",
+                                DisplayName = "2.0*2.2*0.20",
+                                SizeSpec = "2.0*2.2*0.20",
+                                Type = "床垫",
+                                Unit = "张",
+                                Price = 32090
+                            },
+                          new ProductDesc {
+                                ID = "PDESC007",
+                                Name = "学生床",
+                                DisplayName =  "0.9*1.9*0.07",
+                                SizeSpec = "0.9*1.9*0.07",
+                                Type = "学生床",
+                                Unit = "张",
+                                Price = 13330
+                            },
+                          new ProductDesc {
+                                ID = "PDESC008",
+                                Name = "体验床",
+                                DisplayName =  "0.75*1.9*0.20",
+                                SizeSpec = "0.75*1.9*0.20",
+                                Type = "体验床",
+                                Unit = "张",
+                                Price = 11370
                             }
 
                 };

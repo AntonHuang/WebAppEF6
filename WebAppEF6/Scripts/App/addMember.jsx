@@ -107,9 +107,17 @@ var addMember = React.createClass({
                       <div className="form-group">
                             <label className="col-md-3 control-label" htmlFor="Level">会员类别：</label>
                             <div className="col-md-3">
-                                <select className="form-control" id="Level" ref="Level" defaultValue = "level0" >
-                                  <option value="level0">普通会员</option>
-                                  <option value="level1">高级会员</option>
+                                <select className="form-control" id="Level" ref="Level" defaultValue = "levelA" >
+                                  <option value="levelA">普通会员</option>
+                                    <option value="levelB">高级会员</option>
+                                    <option value="levelB1">高级会员 1级</option>
+                                    <option value="levelB2">高级会员 2级</option>
+                                    <option value="levelB3">高级会员 3级</option>
+                                    <option value="levelB4">高级会员 4级</option>
+                                    <option value="levelB5">高级会员 5级</option>
+                                    <option value="levelB6">高级会员 6级</option>
+                                    <option value="levelB7">高级会员 7级</option>
+                                    <option value="levelB8">高级会员 8级</option>
                                 </select>
                             </div>
                       </div>

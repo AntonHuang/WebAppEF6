@@ -15,6 +15,7 @@ namespace WebApp.Models
         public string CustomerID { get; set; }
         public DateTime SaleDate { get; set; }
         public string Gifts { get; set; }
+        public bool IsUseCashCoupon { get; set; }
 
     }
 

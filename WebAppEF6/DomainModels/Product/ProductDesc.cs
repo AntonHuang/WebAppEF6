@@ -15,5 +15,13 @@ namespace WebApp.DomainModels.Product
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public string DisplayName { get; set; }
+        public string SizeSpec { get; set; }
+        public string Unit { get; set; }
+        public int StateFlag { get; set; }
+
+        public ProductDesc() {
+            StateFlag = 1;
+        }
     }
 }

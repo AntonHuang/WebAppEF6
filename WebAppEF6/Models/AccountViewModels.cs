@@ -125,4 +125,17 @@ namespace WebAppEF6.Models
         public string Address { get; set; }
         public string Level { get; set; }
     }
+
+    public class UserInfoViewModel
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public string Level { get; set; }
+        public string Role { get;  set; }
+        public string RegisterDate { get;  set; }
+        public bool NeedToChangePassword { get;  set; }
+        public decimal SelfPointRate { get;  set; }
+        public decimal Down1PointRate { get;  set; }
+        public decimal Down2PointRate { get;  set; }
+    }
 }

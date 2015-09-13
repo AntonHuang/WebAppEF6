@@ -288,7 +288,7 @@ var accountStore = Reflux.createStore({
         });
     },
 
-    onSellMattress: function (MattressID, MattressTypeID, DeliveryAddress, CustomerID, SaleDate, Gifts) {
+    onSellMattress: function (MattressID, MattressTypeID, DeliveryAddress, CustomerID, SaleDate, Gifts, IsUseCashCoupon) {
         console.debug("do onSellMattress");
         var self = this;
         var requestData = {
@@ -297,7 +297,8 @@ var accountStore = Reflux.createStore({
             DeliveryAddress: DeliveryAddress, 
             CustomerID: CustomerID,
             SaleDate: SaleDate,
-            Gifts: Gifts
+            Gifts: Gifts,
+            IsUseCashCoupon: IsUseCashCoupon
         };
         $.ajax({
             type: "POST",
