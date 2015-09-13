@@ -160,7 +160,7 @@ var SellMattress = React.createClass({
 
                                   </div>
                                     
-                                 <label className="col-md-2 control-label" htmlFor="IsUseCashCoupon">使用代金卷：</label>
+                                 <label className="col-md-2 control-label" htmlFor="IsUseCashCoupon">使用代金券：</label>
                                 <div className="col-md-4">
                                     <select className="form-control" id="IsUseCashCoupon" ref="IsUseCashCoupon" defaultValue = '0'>
                                         <option value='1'>是</option>;
