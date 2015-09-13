@@ -22,7 +22,7 @@ using System.Data.Entity;
 
 namespace WebApp.Controllers
 {
-    [Authorize()]
+    [Authorize]
     public class MattressController : AsyncController
     {
 
@@ -98,6 +98,7 @@ namespace WebApp.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Administrator,ShopManager")]
         public async Task<ActionResult> ListMattressType()
         {
             if (ModelState.IsValid)
@@ -119,6 +120,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,ShopManager")]
         public async Task<ActionResult> Sell(SellToCustomerViewModel model)
         {
             if (ModelState.IsValid)
@@ -484,6 +486,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,ShopManager")]
         public async Task<ActionResult> PointExch(MemberPointInfoViewModel model)
         {
             if (ModelState.IsValid)

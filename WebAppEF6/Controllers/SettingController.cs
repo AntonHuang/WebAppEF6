@@ -24,7 +24,7 @@ namespace WebApp.Controllers
 {
 
 
-    [Authorize()]
+    [Authorize(Roles = "Administrator,ShopManager")]
     public class SettingController : AsyncController
     {
 

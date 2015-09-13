@@ -299,7 +299,7 @@ namespace WebAppEF6.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -406,6 +406,7 @@ namespace WebAppEF6.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Administrator,ShopManager")]
         public  ActionResult FindMember(FindMemberViewModel model)
         {
             if (ModelState.IsValid)
@@ -487,6 +488,7 @@ namespace WebAppEF6.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,ShopManager")]
         public async Task<ActionResult> ModifyMember(MemberInfoModel model)
         {
             if (ModelState.IsValid)
