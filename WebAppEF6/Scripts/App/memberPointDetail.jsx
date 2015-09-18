@@ -5,7 +5,7 @@ var Actions = Actions || require("./Actions.js");
 var AccountStore = require("./store/Account.js");
 var GriddleWithCallback = require("./griddleWithCallback.jsx");
 
-var tableNoDataMessage = "没找到积分记录。";
+var tableNoDataMessage = "--没找到积分记录--";
 var tableColumns = ["ProductBuyerName", "ProductTypeName", "BuyerRelation", "DealDate", "Point", "CurrentTotalPoint"];
 var tablecolumsMeteData = [
  {
@@ -110,7 +110,7 @@ var MemberPointDetail = React.createClass({
 
     onFindMemberPointDetailFail: function (data) {
         console.debug("onFindMemberPointDetailFail", data);
-        alert("查询出错！");
+        //alert("查询出错！");
         if (typeof (this.state.tableCallback) === 'function') {
             this.state.tableCallback({
                 results: []
@@ -125,7 +125,7 @@ var MemberPointDetail = React.createClass({
 
     onRetrieveMemberPointInfoFail: function (data) {
         console.debug("onRetrieveMemberPointInfoFail", data);
-        alert("查询出错！");
+        //alert("查询出错！");
     },
 
     componentWillMount: function () {

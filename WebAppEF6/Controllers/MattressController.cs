@@ -220,7 +220,8 @@ namespace WebApp.Controllers
                         DeliveryAddress= saleToCustomerDetail.DeliveryAddress,
                         CustomerID= saleToCustomer.Customer.MemberID,
                         SaleDate= saleToCustomer.DealDate.Date.ToString("yyyy'-'MM'-'dd"),
-                        Gifts= saleToCustomerDetail.Gifts
+                        Gifts= saleToCustomerDetail.Gifts,
+                        IsUseCashCoupon = model.IsUseCashCoupon
                     },
                 JsonRequestBehavior.AllowGet
             });

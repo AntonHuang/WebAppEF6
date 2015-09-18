@@ -19,7 +19,7 @@ namespace WebAppEF6.Models
         }
 
 
-        public static readonly string IINT_PASSWORD = "88888888";
+        public static readonly string IINT_PASSWORD = "888888";
         public bool ChangedPassword { get; set; }
         public virtual Member MemberInfo { get; set; }
     }

@@ -73,7 +73,7 @@ var Manage = React.createClass({
             //console.debug("Manage willTransitionTo ", transition, params, query, callback)
             var user = AccountStore.getCurrentUser();
             if (!user || (user.Role != "Administrator" && user.Role != "ShopManager")) {
-                console.debug("Manage Router  Deny", transition);
+                console.debug("Manage Router  Deny", transition, user);
                 transition.redirect("home");
             } else {
                 callback();
@@ -134,7 +134,7 @@ var routes = (
       <Route name="changePassword" path="changePassword" handler={ChangePassword} />
     </Route>
     <Route handler={Home} name="home" />
-    <Route handler={Manage} name="manage">
+    <Route handler={Manage} path="manage" name="manage">
        <Route name="addMember" path="addMember" handler={AddMember} />
        <Route name="updateMember" path="updateMember" handler={UpdateMember} />
        <Route name="addMattress" path="addMattress" handler={SellMattressTask} />

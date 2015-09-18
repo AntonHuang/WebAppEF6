@@ -290,8 +290,12 @@ namespace WebAppEF6.Controllers
         public async Task<ActionResult> NextAccountID()
         {
             var newID = await Task.Run<string>(() => {
-                return IDGenerator.GetMemberIDGenerator(this.AppDbContext)
-                                    .GetNext();
+                var cacheID = Session["NextMemberID"];
+                if (cacheID == null) {
+                    cacheID = IDGenerator.GetMemberIDGenerator(this.AppDbContext).GetNext();
+                    Session.Add("NextMemberID", cacheID);
+                }
+                return cacheID.ToString();
             });
             return JsonMessage.JsonResult(new { NextAccountID = newID ?? "" });
         }
@@ -362,6 +366,8 @@ namespace WebAppEF6.Controllers
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     //return RedirectToAction(nameof(HomeController.Index), "Home");
+
+                    Session.Remove("NextMemberID");
                     return JsonMessage.JsonResult("OK");
                 }
                 AddErrors(result);
@@ -434,40 +440,18 @@ namespace WebAppEF6.Controllers
                     predicate = predicate.Or(m => m.MemberID != null
                                   && m.MemberID.StartsWith(model.MemberID));
 
-                    predicate = predicate.Or(m => m.ReferenceID != null && m.ReferenceID.StartsWith(model.MemberID));
+                    predicate = predicate.Or(m => m.ReferenceID != null && m.ReferenceID.StartsWith(model.MemberID,StringComparison.InvariantCultureIgnoreCase));
 
-                    predicate = predicate.Or(m => m.Name != null && m.Name.IndexOf(model.MemberID) > -1);
+                    predicate = predicate.Or(m => m.Name != null && m.Name.IndexOf(model.MemberID,StringComparison.InvariantCultureIgnoreCase) > -1);
 
-                    predicate = predicate.Or(m => m.IDCard != null && m.IDCard.StartsWith(model.MemberID));
+                    predicate = predicate.Or(m => m.IDCard != null && m.IDCard.StartsWith(model.MemberID, StringComparison.InvariantCultureIgnoreCase));
 
-                    predicate = predicate.Or(m => m.Phone != null && m.Phone.StartsWith(model.MemberID));
+                    predicate = predicate.Or(m => m.Phone != null && m.Phone.StartsWith(model.MemberID, StringComparison.InvariantCultureIgnoreCase));
 
                     result = result.Where(predicate.Compile()).AsQueryable();
                 }
 
-                if (string.IsNullOrWhiteSpace(model.ReferenceID) == false)
-                {
-                    result = result.Where(m => m.ReferenceID != null && m.ReferenceID.StartsWith(model.ReferenceID,
-                                                                        StringComparison.InvariantCultureIgnoreCase));
-                }
-                if (string.IsNullOrWhiteSpace(model.Name) == false)
-                {
-                    result = result.Where(m => m.Name != null && m.Name.IndexOf(model.Name) > -1);
-                }
-
-                if (string.IsNullOrWhiteSpace(model.IDCard) == false)
-                {
-                    result = result.Where(
-                        m => m.IDCard != null && m.IDCard.StartsWith(model.IDCard,
-                                                     StringComparison.InvariantCultureIgnoreCase));
-                }
-
-                if (string.IsNullOrWhiteSpace(model.Phone) == false)
-                {
-                    result = result.Where(
-                        m => m.Phone != null && m.Phone.StartsWith(model.Phone,
-                                                                    StringComparison.InvariantCultureIgnoreCase));
-                }
+                
 
                 int size = result.Count();
 

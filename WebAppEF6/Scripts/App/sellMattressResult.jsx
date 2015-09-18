@@ -93,6 +93,14 @@ var SellMattressResult = React.createClass({
                    readOnly   defaultValue={this.props.sellMattressData.SaleDate } />
 
           </div>
+
+        <label className="col-md-2 control-label" htmlFor="IsUseCashCoupon">使用代金券：</label>
+                                <div className="col-md-4">
+
+                                      <input className="form-control uneditable-input" id="IsUseCashCoupon" ref="IsUseCashCoupon" type="text"
+                                             readOnly defaultValue={this.props.sellMattressData.IsUseCashCoupon==1 ? "是" : "否" } />
+                                </div>
+
     </div>
 <div className="form-group">
     <label className="col-md-2 control-label" htmlFor="Gifts">赠送礼品：</label>

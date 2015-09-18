@@ -15,7 +15,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     }
 });
 
-var User = {}
+var User = User || {};
 
 var accountStore = Reflux.createStore({
     

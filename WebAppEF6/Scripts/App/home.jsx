@@ -27,11 +27,11 @@ var MemberInfo = React.createClass({
                                            type="text" readOnly
                                            value={this.props.user.Name} />
                                 </div>
-                        <label className="col-md-2 control-label" htmlFor="IDCard">入会时间：</label>
+                        <label className="col-md-2 control-label" htmlFor="ID">会员ID：</label>
                         <div className="col-md-4">
-                            <input className="form-control" id="IDCard" ref="IDCard"
+                            <input className="form-control" id="ID" ref="ID"
                                    type="text" readOnly
-                                   value={this.props.user.RegisterDate } />
+                                   value={this.props.user.ID } />
                         </div>
 
 
@@ -43,12 +43,31 @@ var MemberInfo = React.createClass({
                                      readOnly  defaultValue={this.props.user.Level} />
                               </div>
 
+                       <label className="col-md-2 control-label" htmlFor="IDCard">入会时间：</label>
+                        <div className="col-md-4">
+                            <input className="form-control" id="IDCard" ref="IDCard"
+                                   type="text" readOnly
+                                   value={this.props.user.RegisterDate } />
+                        </div>
+
+                   </div>
+
+                   <div className="form-group">
+                            
+
                            <label className="col-md-2 control-label" htmlFor="SelfPointRate">推荐积分比：</label>
                             <div className="col-md-4">
                                 <input className="form-control" id="SelfPointRate" ref="SelfPointRate"
                                        type="text" readOnly
                                        value={this.props.user.SelfPointRate + '%' } />
                             </div>
+
+                       <label className="col-md-2 control-label" htmlFor="Down1PointRate">合作积分比：</label>
+                              <div className="col-md-4">
+                                  <input className="form-control" id="Down1PointRate" ref="Down1PointRate" type="text"
+                                         readOnly defaultValue={this.props.user.Down1PointRate + '%'} />
+                              </div>
+
                    </div>
                </section>
             </div>
