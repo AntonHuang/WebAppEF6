@@ -337,7 +337,7 @@ namespace WebAppEF6.Controllers
 
                 var member = new Member
                 {
-                    MemberID = model.AccountID,
+                    MemberID = IDGenerator.GetMemberIDGenerator(this.AppDbContext).GetNext(),
                     Reference = menberReference,
                     Name = model.Name,
                     IDCard = model.CardID,
@@ -347,8 +347,8 @@ namespace WebAppEF6.Controllers
 
                 var user = new ApplicationUser
                 {
-                    Id = model.AccountID,
-                    UserName = model.AccountID,
+                    Id = member.MemberID,
+                    UserName = member.MemberID,
                     MemberInfo = member,
                     PhoneNumber = model.Phone
                 };
@@ -368,7 +368,7 @@ namespace WebAppEF6.Controllers
                     //return RedirectToAction(nameof(HomeController.Index), "Home");
 
                     Session.Remove("NextMemberID");
-                    return JsonMessage.JsonResult("OK");
+                    return JsonMessage.JsonResult(member.MemberID);
                 }
                 AddErrors(result);
             }

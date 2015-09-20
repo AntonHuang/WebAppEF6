@@ -62,10 +62,11 @@ namespace WebAppEF6.Models
     public class RegisterViewModel
     {
 
-        [Required]
+        
         public string AccountID { get; set; }
 
         public string ReferenceID { get; set; }
+
         public string Name { get; set; }
         public string CardID { get; set; }
         public string Address { get; set; }

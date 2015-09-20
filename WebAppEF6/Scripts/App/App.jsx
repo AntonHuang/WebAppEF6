@@ -160,6 +160,8 @@ AppRouter.run(function (Handler) {
 
 if (!user || !user.ID) {
     Actions.retrieveUserInfo();
+}else {
+    Actions.loadedUserInfo(user);
 }
 
 

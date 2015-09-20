@@ -1,28 +1,50 @@
 ﻿var React = React || require('react');
 var Actions = Actions || require("./Actions.js");
 var Reflux = Reflux || require("reflux");
+var RouterStore = require('./RouterStore');
 
 var addMember = React.createClass({
 
     mixins: [Reflux.ListenerMixin],
 
+    /*
     onNextAccountIDDone: function(data){
-        this.AccountIDDom.value = data.NextAccountID;
+        //this.AccountIDDom.value = data.NextAccountID;
     },
 
     onNextAccountIDFail: function () {
         alert("无法生成新的会员ID。");
+    },*/
+
+    onRegisterDone: function (data) {
+        console.debug("onRegisterDone", data);
+        alert("成功添加新会员: " + data);
+        RouterStore.get().transitionTo("manage");
+    },
+
+    onRegisterFail: function (appError) {
+        console.debug("onRegisterFail", appError);
+        if ("ReferenceID is not exist." === appError) {
+            alert("推荐人ID号不存在！");
+        } else if (appError && appError[0] && appError[0].ErrorMessage) {
+            alert("添加失败！" + appError[0].ErrorMessage);
+        } else {
+            alert("添加失败！");
+        }
     },
 
     componentWillMount: function(){
-        this.listenTo(Actions.nextAccountIDDone,this.onNextAccountIDDone);
-        this.listenTo(Actions.nextAccountIDFail,this.onNextAccountIDFail);
+        //this.listenTo(Actions.nextAccountIDDone,this.onNextAccountIDDone);
+        //this.listenTo(Actions.nextAccountIDFail,this.onNextAccountIDFail);
 
-        Actions.nextAccountID();
+        //Actions.nextAccountID();
+
+        this.listenTo(Actions.registerDone, this.onRegisterDone);
+        this.listenTo(Actions.registerFail, this.onRegisterFail);
     },
 
     componentDidMount: function () {
-        this.AccountIDDom = React.findDOMNode(this.refs.AccountID);
+        //this.AccountIDDom = React.findDOMNode(this.refs.AccountID);
         this.ReferenceIDDom = React.findDOMNode(this.refs.ReferenceID);
         this.NameDom = React.findDOMNode(this.refs.Name);
         this.CardIDDom = React.findDOMNode(this.refs.CardID);
@@ -33,15 +55,16 @@ var addMember = React.createClass({
 
     handleSubmit: function (e) {
         e.preventDefault();
-        var accountID = this.AccountIDDom.value.trim();
+        //var accountID = this.AccountIDDom.value.trim();
+        var accountID = "";
         var referenceID = this.ReferenceIDDom.value.trim();
         var name = this.NameDom.value.trim();
         var cardID = this.CardIDDom.value.trim();
         var address = this.AddressDom.value.trim();
         var phone = this.PhoneDom.value.trim();
         var level = this.LevelDom.value.trim();
-        if (!accountID) {
-            alert("会员ID不能留空！");
+        if (!name) {
+            alert("会员姓名不能留空！");
             return;
         } 
 
@@ -59,14 +82,6 @@ var addMember = React.createClass({
                         <hr />
                         <div className="text-danger"></div>
                         <div className="form-group">
-                            <label className="col-md-3 control-label" htmlFor="AccountID">会员ID号：</label>
-                            <div className="col-md-3">
-                                <input className="form-control uneditable-input" 
-                                       id="AccountID" ref="AccountID" 
-                                       type="text" readOnly />
-                                
-                            </div>
-
                             <label className="col-md-3 control-label" htmlFor="ReferenceID">推荐人ID号：</label>
                             <div className="col-md-3">
                                 <input className="form-control" id="ReferenceID" ref="ReferenceID"

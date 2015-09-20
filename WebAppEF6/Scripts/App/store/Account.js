@@ -15,9 +15,9 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     }
 });
 
-var User = User || {};
+var localStorageKey = "CurrentUser";
 
-var accountStore = Reflux.createStore({
+var AccountStore = Reflux.createStore({
     
     init: function () {
         this.listenTo(Actions.retrieveUserInfo, this.getUserInfo);
@@ -48,8 +48,21 @@ var accountStore = Reflux.createStore({
     },
 
     getCurrentUser: function () {
-        console.debug("getCurrentUser", User);
-        return User;
+        var loaded = localStorage.getItem(localStorageKey);
+        if (loaded) {
+            
+            this.User = JSON.parse(loaded);
+        } else {
+            this.User = {};
+        }
+        console.debug("getCurrentUser", this.User);
+        return this.User;
+    },
+
+    setCurrentUser: function (user) {
+        console.debug("setCurrentUser", user);
+        localStorage.setItem(localStorageKey, JSON.stringify(user));
+        this.User = user;
     },
 
     loadedUserInfo: function (user) {
@@ -65,22 +78,25 @@ var accountStore = Reflux.createStore({
         } else {
             RouterStore.get().transitionTo("login");
         }
-        accountStore.trigger(currUser);
+        AccountStore.trigger(currUser);
     },
 
     getUserInfo: function () {
         console.debug("do getUserInfo");
+        var self = this;
         $.ajax({
             type: "GET",
             url: "/Account/UserInfo"
         }).success(function (data) {
             console.debug("getUserInfo done!");
-            User = data;
+            var User = data;
+            self.setCurrentUser(User);
             Actions.loadedUserInfo(User);
-            //accountStore.trigger(User);
+            //AccountStore.trigger(User);
         }).fail(function (jqxhr, textStatus, errorThrown) {
             if (jqxhr.status === 404) {
-                User = {};
+                var User = {};
+                self.setCurrentUser(User);
                 Actions.loadedUserInfo(User);
             }
         });
@@ -88,6 +104,7 @@ var accountStore = Reflux.createStore({
 
     login: function (userName, userPassword, remember){
         console.debug("do login");
+        var self = this;
         var requestData = { UserID: userName, Password: userPassword, RememberMe: remember };
         $.ajaxAntiForgery({
             type: "POST",
@@ -96,10 +113,11 @@ var accountStore = Reflux.createStore({
             dataType: "json"
         }).success(function (data,  textStatus, jqXHR) {
             console.debug("login done!");
-            User = data;
+            var User = data;
             //console.debug("response = " + jqXHR.responseText);
+            self.setCurrentUser(User);
             Actions.loadedUserInfo(User);
-            //accountStore.trigger(User);
+            //AccountStore.trigger(User);
             //RouterStore.get().transitionTo("/");
         }).fail(function (jqxhr, textStatus, errorThrown) {
             console.debug("login error!");
@@ -109,12 +127,14 @@ var accountStore = Reflux.createStore({
 
     logout: function (userName, userPassword, remember) {
         console.debug("do logout");
+        var self = this;
         $.ajaxAntiForgery({
             type: "POST",
             url: "/Account/LogOff"
         }).success(function (data, textStatus, jqXHR) {
             console.debug("logout done!");
-            User = {};
+            var User = {};
+            self.setCurrentUser(User);
             Actions.loadedUserInfo(User);
         });
     },
@@ -137,8 +157,6 @@ var accountStore = Reflux.createStore({
             dataType: "json"
         }).done(function (data) {
             console.debug("register done!");
-            alert("添加成功！");
-            RouterStore.get().transitionTo("manage");
             Actions.registerDone(data);
         }).fail(function (jqxhr, textStatus, errorThrown) {
             if (/application\/json/.test(jqxhr.getResponseHeader('Content-Type'))) {
@@ -148,15 +166,14 @@ var accountStore = Reflux.createStore({
                     console.debug(e);
                 }
             }
-            if ("ReferenceID is not exist." === jqxhr.appError) {
-                alert("推荐人ID号不存在！")
-            }
+            
             Actions.registerFail(jqxhr.appError);
         });
     },
 
     changePassword: function (oldPassw, newPassW, newPassWCf) {
         console.debug("do changePassword");
+        var self = this;
         var requestData = { OldPassword: oldPassw, NewPassword: newPassW, ConfirmPassword: newPassWCf };
         $.ajaxAntiForgery({
             type: "POST",
@@ -166,9 +183,10 @@ var accountStore = Reflux.createStore({
         }).done(function (data, textStatus, jqXHR) {
             console.debug("changePassword done!");
             alert("修改成功！");
-            var currUser = accountStore.getCurrentUser();
+            var currUser = self.getCurrentUser();
             currUser.NeedToChangePassword = false;
-            Actions.loadedUserInfo();
+            self.setCurrentUser(currUser);
+            Actions.loadedUserInfo(currUser);
         }).fail(function (jqxhr, textStatus, errorThrown) {
             if (/application\/json/.test(jqxhr.getResponseHeader('Content-Type'))) {
                 try {
@@ -436,5 +454,5 @@ var accountStore = Reflux.createStore({
 
 
 if (typeof exports === "object" && typeof module !== "undefined") {
-    module.exports = accountStore;
+    module.exports = AccountStore;
 }
