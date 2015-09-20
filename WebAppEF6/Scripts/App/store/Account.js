@@ -55,7 +55,7 @@ var AccountStore = Reflux.createStore({
         } else {
             this.User = {};
         }
-        console.debug("getCurrentUser", this.User);
+        console.debug("getCurrentUser");
         return this.User;
     },
 
