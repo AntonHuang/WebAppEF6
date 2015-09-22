@@ -221,6 +221,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="gulpfile.js" />
+    <Content Include="Images\Logo.jpg" />
+    <Content Include="Images\logo_min.png" />
     <Content Include="Scripts\App\Actions.js" />
     <Content Include="Scripts\App\addMember.jsx" />
     <Content Include="Scripts\App\App.jsx" />
@@ -339,6 +341,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties package_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

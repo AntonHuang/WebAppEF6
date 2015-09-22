@@ -27,7 +27,7 @@ var tablecolumsMeteData = [
       "order": 3,
       "locked": false,
       "visible": true,
-      "displayName": "关系"
+      "displayName": "积分类型"
   },
   {
       "columnName": "DealDate",

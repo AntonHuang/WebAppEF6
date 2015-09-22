@@ -561,7 +561,7 @@ namespace WebApp.Controllers
                 var newResult = (from item in result
                                  select new {
                                      ProductBuyerName = item.ProductBuyerName,
-                                     BuyerRelation = item.ProductBuyerReferenceID.Equals(id) ? "直接推荐" : "下家推荐",
+                                     BuyerRelation = item.ProductBuyerReferenceID.Equals(id) ? "推荐积分" : "合作积分",
                                      ProductTypeName = item.ProductType,
                                      DealDate = item.DealDate.ToString("yyyy'-'MM'-'dd"),
                                      Point = item.Point,
