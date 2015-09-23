@@ -24,10 +24,10 @@ var login = React.createClass({
     render: function () {
         return (
           <div className="row">
-             <div className="col-md-8">
+             <div className="col-sm-12 col-md-8">
                  <div className="row">
-                      <div className="col-md-8 col-centered">
-                          <img className="loginBanner" src="/Images/Logo.jpg" />
+                      <div className="col-sm-12 col-md-10 col-lg-8  col-centered ">
+                          <img className="loginBanner" src="/Images/Account_Banner_560.JPG" />
                       </div>
                  </div>
                     

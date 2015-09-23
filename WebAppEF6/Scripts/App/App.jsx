@@ -130,7 +130,6 @@ var routes = (
   <Route handler={App} path="/" name="app">
     <Route handler={Account} path="account">
       <Route name="login" path="login" handler={Login} />
-      <Route name="register" path="register" handler={Register} />
       <Route name="changePassword" path="changePassword" handler={ChangePassword} />
     </Route>
     <Route handler={Home} name="home" />
