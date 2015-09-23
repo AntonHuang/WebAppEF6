@@ -30,7 +30,7 @@ var userInfo = React.createClass({
 
     render: function () {
         if (!this.state.currentUser || !this.state.currentUser.ID) {
-            return (<div></div>);
+            return (<h2 className="locationTitle navbar-right">山东 烟台</h2>);
         }else{
             return (
                  <ul className="nav navbar-nav navbar-right">
