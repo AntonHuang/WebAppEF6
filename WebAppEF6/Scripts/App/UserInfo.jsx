@@ -30,13 +30,16 @@ var userInfo = React.createClass({
 
     render: function () {
         if (!this.state.currentUser || !this.state.currentUser.ID) {
-            return (<h2 className="locationTitle navbar-right">山东 烟台</h2>);
+            return (<span></span>);
         }else{
             return (
-                 <ul className="nav navbar-nav navbar-right">
-                     <li><a href="#Account/changePassword">修改密码</a></li>
-                    <li><a href="#Account/login" onClick={this.logout}>退出系统</a></li>
-                 </ul>
+                <div className="row navbar-right">
+                     <ul className="col-xs-10 col-sm-10 col-md-10  nav navbar-nav ">
+                         <li><a href="#Account/changePassword">修改密码</a></li>
+                         <li><a href="#Account/login" onClick={this.logout}>退出系统</a></li>
+                     </ul>
+                     <p className="col-xs-10 col-sm-10 col-md-10  locationTitle navbar-right">山东 烟台</p>
+                </div>
             );
         }
     }

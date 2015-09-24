@@ -43,11 +43,11 @@ textarea {
 }
 
 .locationTitle {
-    color: black;
+    color: #4f4b4a;
+    font-size: 22px;
     font-weight:bold;
     vertical-align:bottom;
-    padding-top: 25px;
-    padding-right: 25px;
+    margin:0px;
 }
 
 
